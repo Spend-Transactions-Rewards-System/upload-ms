@@ -1,8 +1,12 @@
 from flask import Flask
 from src.utils.db import db
-from flask_migrate import Migrate
+from src.view.rewards import rewards
+from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 
-db.init_app(app)
-migrate = Migrate(app, db)
+# db.init_app(app)
+load_dotenv()
+
+app.register_blueprint(rewards, url_prefix="/rewards")
