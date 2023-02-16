@@ -1,42 +1,7 @@
-def get_mcc_category(code):
-    if 1 <= code <= 1499:
-        return AGRICULTURAL_SERVICES.get(code, "Agricultural Services")
-    elif 1500 <= code <= 2999:
-        return CONTRACTED_SERVICES.get(code, "Contracted Services")
-    elif 3000 <= code <= 3299:
-        return AIRLINES.get(code, "Airlines")
-    elif 3300 <= code <= 3499:
-        return CAR_RENTAL.get(code, "Car Rental")
-    elif 3500 <= code <= 3999:
-        return LODGING.get(code, "Lodging")
-    elif 4000 <= code <= 4799:
-        return TRANSPORT.get(code, "Transport")
-    elif 4800 <= code <= 4999:
-        return UTILITY_SERVICES.get(code, "Utility Services")
-    elif 5000 <= code <= 5599:
-        return RETAIL_OUTLET_SERVICES.get(code, "Retail Outlet Services")
-    elif 5600 <= code <= 5699:
-        return CLOTHING_STORES.get(code, "Clothing Stores")
-    elif 5700 <= code <= 7299:
-        return MISCELLANEOUS_STORES.get(code, "Miscellaneous Stores")
-    elif 7300 <= code <= 7999:
-        return BUSINESS_SERVICES.get(code, "Business Services")
-    elif 8000 <= code <= 8999:
-        return PROFESSIONAL_SERVICES_AND_MEMBERSHIP_ORGANIZATIONS.get(
-            code, "Professional Services and Membership Organizations")
-    elif 9000 <= code <= 9999:
-        return GOVERNMENT_SERVICES.get(code, "Government Services")
-    else:
-        return None
-
-
-AGRICULTURAL_SERVICES = {
+MCC_LIST = {
     742: "Veterinary Services",
     763: 'Agricultural Cooperatives',
     780: 'Horticultural and Landscaping Services',
-}
-
-CONTRACTED_SERVICES = {
     1520: 'General Contractors–Residential and Commercial',
     1711: 'Air Conditioning, Heating and Plumbing Contractors',
     1731: 'Electrical Contractors',
@@ -47,10 +12,7 @@ CONTRACTED_SERVICES = {
     1799: 'Contractors, Special Trade Contractors–not elsewhere classified',
     2741: 'Miscellaneous Publishing and Printing',
     2791: 'Typesetting, Plate Making and Related Services',
-    2842: 'Sanitation, Polishing and Specialty Cleaning Preparations'
-}
-
-AIRLINES = {
+    2842: 'Sanitation, Polishing and Specialty Cleaning Preparations',
     3000: 'United Airlines',
     3001: 'American Airlines',
     3002: 'Pan American',
@@ -262,10 +224,7 @@ AIRLINES = {
     3296: 'Air Berlin',
     3297: 'Tarom Romanian Air Transport',
     3298: 'Air Mauritius',
-    3299: 'Wideroes Flyveselskap'
-}
-
-CAR_RENTAL = {
+    3299: 'Wideroes Flyveselskap',
     3351: 'Affiliated Auto Rental',
     3352: 'American International',
     3353: 'Brooks Rent-A-Car',
@@ -299,10 +258,7 @@ CAR_RENTAL = {
     3400: 'Auto Host Rental Cars',
     3405: 'Enterprise Rent-A-Car',
     3409: 'General Rent-A-Car',
-    3412: 'A1 Rent-A-Car'
-}
-
-LODGING = {
+    3412: 'A1 Rent-A-Car',
     3501: 'Holiday Inns',
     3502: 'Best Western',
     3503: 'Sheraton',
@@ -632,15 +588,9 @@ LODGING = {
     3828: 'Yew Lian Hotel',
     3829: 'York Hotel Singapore',
     3830: 'YOTEL Singapore Orchard Road',
-    3831: 'YOTELAIR Singapore Changi Airport'
-}
-
-TRANSPORT = {
+    3831: 'YOTELAIR Singapore Changi Airport',
     4111: 'Transportation–Suburban and Local Commuter Passenger, including Ferries Taxis & public transport',
-    4121: 'Taxicabs and Limousines'
-}
-
-UTILITY_SERVICES = {
+    4121: 'Taxicabs and Limousines',
     4812: 'Telecommunication Equipment Including Telephone Sales',
     4813: 'Key-Entry Telecom Merchant providing single local and long-distance phone calls using a central access number in a non-face-to-face environment using key entry',
     4814: 'Telecommunication Services including but not limited to prepaid phone services and recurring phone services',
@@ -648,10 +598,7 @@ UTILITY_SERVICES = {
     4821: 'Telegraph Services',
     4829: 'Wire Transfer Money Orders (V, D, G, X), Money Transfer (M)',
     4899: 'Cable, Satellite, and Other Pay Television and Radio Services',
-    4900: 'Utilities–Electric, Gas, Heating Oil, Sanitary, Water'
-}
-
-RETAIL_OUTLET_SERVICES = {
+    4900: 'Utilities–Electric, Gas, Heating Oil, Sanitary, Water',
     5013: 'Motor Vehicle Supplies and New Parts',
     5021: 'Office and Commercial Furniture',
     5039: 'Construction Materials Not Elsewhere Classified',
@@ -707,10 +654,7 @@ RETAIL_OUTLET_SERVICES = {
     5571: 'Motorcycle Shops and Dealers',
     5592: 'Motor Home Dealers',
     5598: 'Snowmobile Dealers',
-    5599: 'Miscellaneous Automotive, Aircraft, and Farm Equipment Dealers–Not Elsewhere Classified'
-}
-
-CLOTHING_STORES = {
+    5599: 'Miscellaneous Automotive, Aircraft, and Farm Equipment Dealers–Not Elsewhere Classified',
     5611: 'Men\'s and Boys\' Clothing and Accessories Stores',
     5621: 'Women\'s Ready to Wear Stores',
     5631: 'Women\'s Accessory and Specialty Stores',
@@ -722,10 +666,7 @@ CLOTHING_STORES = {
     5691: 'Men\'s and Women\'s Clothing Stores',
     5697: 'Alterations, Mending, Seamstresses, Tailors',
     5698: 'Wig and Toupee Shops',
-    5699: 'Accessory and Apparel Stores–Miscellaneous'
-}
-
-MISCELLANEOUS_STORES = {
+    5699: 'Accessory and Apparel Stores–Miscellaneous',
     5712: 'Equipment, Furniture and Home Furnishings Stores (except Appliances)',
     5713: 'Floor Covering Stores',
     5714: 'Drapery, Upholstery and Window Coverings Stores',
@@ -831,10 +772,7 @@ MISCELLANEOUS_STORES = {
     7296: 'Clothing Rental–Costumes, Uniforms and Formal Wear',
     7297: 'Massage Parlors',
     7298: 'Health and Beauty Spas',
-    7299: 'Other Services–Not Elsewhere Classified'
-}
-
-BUSINESS_SERVICES = {
+    7299: 'Other Services–Not Elsewhere Classified',
     7311: 'Advertising Services',
     7321: 'Consumer Credit Reporting Agencies',
     7332: 'Blueprinting and Photocopying Services',
@@ -891,10 +829,7 @@ BUSINESS_SERVICES = {
     7996: 'Amusement Parks, Carnivals, Circuses, Carnivals, Fortune Tellers',
     7997: 'Clubs–Country Clubs, Membership (Athletic, Recreation, Sports), Private Golf Courses',
     7998: 'Aquariums, Dolphinariums, Zoos and Seaquariums',
-    7999: 'Recreation Services–Not Elsewhere Classified'
-}
-
-PROFESSIONAL_SERVICES_AND_MEMBERSHIP_ORGANIZATIONS = {
+    7999: 'Recreation Services–Not Elsewhere Classified',
     8011: 'Doctors–not elsewhere classified',
     8021: 'Dentists and Orthodontists',
     8031: 'Osteopathic Physicians',
@@ -925,10 +860,7 @@ PROFESSIONAL_SERVICES_AND_MEMBERSHIP_ORGANIZATIONS = {
     8743: 'Testing Laboratories (Non-Medical)',
     8911: 'Architectural, Engineering and Surveying Services',
     8931: 'Accounting, Auditing and Bookkeeping Services',
-    8999: 'Professional Services–Not Elsewhere Classified'
-}
-
-GOVERNMENT_SERVICES = {
+    8999: 'Professional Services–Not Elsewhere Classified',
     9034: 'I-Purchasing Pilot',
     9211: 'Court Costs Including Alimony and Child Support',
     9222: 'Fines',

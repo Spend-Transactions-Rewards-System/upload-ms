@@ -7,7 +7,7 @@ Inserting objects into s3 bucket
 '''
 
 
-def upload_file_to_s3(file):
+def upload_file_to_s3(file, selection):
     # Connect to the S3 service
     s3 = boto3.client(
         "s3",
@@ -16,11 +16,10 @@ def upload_file_to_s3(file):
     )
 
     # Choose a bucket by name
-    bucket_name = "batch-buckets"
-    folder_name = "transaction_data_raw"
+    folder_name = "raw"
 
     # Write a string to a file in S3
-    s3.upload_fileobj(file, bucket_name, f"{folder_name}/{file.filename}")
+    s3.upload_fileobj(file, buckets[selection], f"{folder_name}/{file.filename}")
 
 
 '''
@@ -35,3 +34,8 @@ Listing objects in s3 bucket
 # List the contents of the bucket
 # for obj in bucket.objects.all():
 #    print(obj.key)
+
+buckets = {
+    "user": "user-t3-bucket",
+    "spend": "spend-t3-bucket"
+}
