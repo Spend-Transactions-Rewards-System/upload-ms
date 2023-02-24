@@ -2,10 +2,10 @@ from flask import Blueprint, request, jsonify
 from src.utils.s3 import upload_file_to_s3
 from src.utils.files import is_valid_file_schema
 
-rewards = Blueprint(name="rewards", import_name=__name__)
+upload = Blueprint(name="upload", import_name=__name__)
 
 
-@rewards.route("/upload", methods=(["POST"]))
+@upload.route("/", methods=(["POST"]))
 def batch_file_upload_to_s3():
     file = request.files['file']
     file_type = request.form["type"]
@@ -21,12 +21,6 @@ def batch_file_upload_to_s3():
                 return jsonify("Unable to upload file"), 500
         else:
             return jsonify("Invalid file format. Please check your file schema."), 400
-
-# After file upload, will use AWS glue to process points based on:
-#   Base Earn Rate
-#   Category rewards
-#   Campaigns
-# Insert data into
 
 
 
