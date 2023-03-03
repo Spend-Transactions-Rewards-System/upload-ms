@@ -1,25 +1,36 @@
 import boto3
 import os
+from datetime import datetime
+from src.utils.db import insert_file_record
+from src.utils.utils import get_bucket_name
 
-s3_resource = boto3.resource("s3")
+s3_resource = boto3.resource(
+    "s3",
+    aws_access_key_id=os.getenv('ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('SECRET_ACCESS_KEY')
+)
 s3_client = boto3.client(
     "s3",
     aws_access_key_id=os.getenv('ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('SECRET_ACCESS_KEY'),
 )
 
-buckets = {
-    "user": "user-t3-bucket",
-    "spend": "spend-t3-bucket"
-}
-
 
 def upload_file_to_s3(file, file_type):
     # Choose a bucket by name
     prefix = "raw"
+    bucket_name = get_bucket_name(file_type)
 
-    # Write a string to a file in S3
-    s3_client.upload_fileobj(file, buckets[file_type], f"{prefix}/{file.filename}")
+    s3_client.upload_fileobj(file, bucket_name, f"{prefix}/{file.filename}")
+
+    file_url = f"https://{bucket_name}.s3.{os.getenv('REGION')}.amazonaws.com/{prefix}/{file.filename}"
+
+    response = insert_file_record(file, file_url)
+    
+    if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+        return "success"
+    else:
+        return None
 
 
 '''
@@ -29,7 +40,7 @@ Listing objects in s3 bucket
 
 def list_files_from_s3(file_type):
     # Specify the bucket and folder
-    bucket_name = buckets[file_type]
+    bucket_name = get_bucket_name(file_type)
     prefix = "error"
 
     # Retrieve the objects in the folder
@@ -41,7 +52,7 @@ def list_files_from_s3(file_type):
 
 def download_file_from_s3(file_type, file_name):
     # Specify the bucket and folder
-    bucket_name = buckets[file_type]
+    bucket_name = get_bucket_name(file_type)
     prefix = "error"
 
     # Download the file
