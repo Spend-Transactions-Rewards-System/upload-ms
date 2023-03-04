@@ -22,6 +22,7 @@ def batch_file_upload_to_s3():
             try:
                 file.filename = f'{get_epoch_timestamp()}-{file.filename}'
                 response = upload_file_to_s3(file, file_type)
+
                 if response:
                     return jsonify("File uploaded"), 200
                 else:
@@ -32,15 +33,19 @@ def batch_file_upload_to_s3():
             return jsonify("Invalid file format. Please check your file schema."), 400
 
 
-@upload.route("/glue", methods=(["PUT"]))
+@upload.route("/glue", methods=(["PATCH"]))
 def update_file_process_status():
-    # try:
-    filename = f"1677870767-spend.csv"
+    try:
+        data = request.get_json()
+        filename = data["filename"]
+        numberOfProcessed = data["numberOfProcessed"]
+        numberOfRejected = data["numberOfRejected"]
+        errorFileURL = data["errorFileURL"]
+    except:
+        return jsonify(f"Invalid request body"), 400
+
     completeDateTime = get_current_datetime()
-    numberOfProcessed = 90000
-    numberOfRejected = 10000
-    errorFileURL = f"https://spend-t3-bucket.s3.ap-southeast-1.amazonaws.com/error/1677870767-spend.csv"
+
     response = update_file_record(filename, completeDateTime, numberOfProcessed, numberOfRejected, errorFileURL)
-    return jsonify(f"Record for file {filename} updated")
-    # except:
-    #     return jsonify("Unable to update record"), 500
+
+    return jsonify(f"Record for file {filename} updated"), 200 if response["ResponseMetadata"]["HTTPStatusCode"] == 200 else jsonify(f"Unable to update record"), 500

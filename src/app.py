@@ -6,4 +6,4 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.register_blueprint(upload, url_prefix="/upload")
+app.register_blueprint(upload, url_prefix="/api/v1/upload")

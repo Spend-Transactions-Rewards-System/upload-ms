@@ -3,13 +3,13 @@ import os
 from src.utils.utils import get_current_datetime
 
 dynamodb = boto3.resource(
-    service_name='dynamodb',
-    region_name=os.getenv('REGION'),
-    aws_access_key_id=os.getenv('ACCESS_KEY_ID'),
-    aws_secret_access_key=os.getenv('SECRET_ACCESS_KEY')
+    service_name="dynamodb",
+    region_name=os.getenv("REGION"),
+    aws_access_key_id=os.getenv("ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("SECRET_ACCESS_KEY")
 )
 
-table = dynamodb.Table('upload')
+table = dynamodb.Table("upload")
 
 PARTITION_KEY_VALUE = "filename"
 
@@ -34,18 +34,22 @@ def insert_file_record(file, file_url):
 def update_file_record(filename, completeDateTime, numberOfProcessed, numberOfRejected, errorFileURL):
     response = table.update_item(
         Key={
-            'partition_key': filename,
+            "filename": filename,
         },
-        UpdateExpression='set completeDateTime = :val1, numberOfProcessed = :val2, numberOfRejected = :val3, nested_object.#link.error = :val4',
+        UpdateExpression="set completeDateTime = :val1, numberOfProcessed = :val2, numberOfRejected = :val3, #link.#err = :val4",
         ExpressionAttributeValues={
-            ':val1': completeDateTime,
-            ':val2': numberOfProcessed,
-            ':val3': numberOfRejected,
-            ':val4': errorFileURL,
+            ":val1": completeDateTime,
+            ":val2": numberOfProcessed,
+            ":val3": numberOfRejected,
+            ":val4": errorFileURL,
         },
         ExpressionAttributeNames={
-            "#link": "url"
+            "#link": "url",
+            "#err": "error"
         },
-        ReturnValues='UPDATED_NEW'
+        ReturnValues="UPDATED_NEW"
     )
     return response
+
+
+#
