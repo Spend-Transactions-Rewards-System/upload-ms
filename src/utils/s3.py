@@ -26,38 +26,16 @@ def upload_file_to_s3(file, file_type, tenant):
     file_url = f"https://{bucket_name}.s3.{os.getenv('REGION')}.amazonaws.com/{prefix}/{file.filename}"
 
     response = insert_file_record(file, file_url, file_type, tenant)
-    
-    if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-        return "success"
-    else:
-        return None
+
+    return response
 
 
-'''
-Listing objects in s3 bucket
-'''
+def download_file_from_s3(url):
+    url_arr = url.split('/')
+    bucket_name, filename = url_arr[2].split(".")[0], f"error-{url_arr[4]}"
+    s3_key = '/'.join(url_arr[3:])
 
+    s3_object = s3_client.get_object(Bucket=bucket_name, Key=s3_key)
+    file_stream = s3_object['Body']
 
-def list_files_from_s3(file_type):
-    # Specify the bucket and folder
-    bucket_name = get_bucket_name(file_type)
-    prefix = "error"
-
-    # Retrieve the objects in the folder
-    bucket = s3_resource.Bucket(bucket_name)
-
-    files = [obj.key for obj in bucket.objects.filter(Prefix=prefix)]
-    return files
-
-
-def download_file_from_s3(file_type, file_name):
-    # Specify the bucket and folder
-    bucket_name = get_bucket_name(file_type)
-    prefix = "error"
-
-    # Download the file
-    bucket = s3_resource.Bucket(bucket_name)
-    object_key = prefix + "/" + file_name
-    file = bucket.download_file(object_key, file_name)
-
-    return file
+    return file_stream, filename

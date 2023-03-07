@@ -2,7 +2,17 @@ import boto3
 import os
 from src.utils.utils import get_epoch_timestamp, buckets
 from dynamodb_json import json_util
+from boto3.dynamodb.conditions import Key
 from collections import defaultdict
+
+TABLENAME = "upload"
+
+PARTITION_KEY_VALUE = "tenant"
+SORT_KEY_VALUE = "uploadTimestamp"
+
+GSI = "filename-uploadTimestamp-index"
+GSI_PARTITION_KEY_VALUE = "filename"
+GSI_SORT_KEY_VALUE = "uploadTimestamp"
 
 dynamodb = boto3.resource(
     service_name="dynamodb",
@@ -18,19 +28,14 @@ dynamodb_client = boto3.client(
     aws_secret_access_key=os.getenv("SECRET_ACCESS_KEY")
 )
 
-table = dynamodb.Table("upload")
-
-PARTITION_KEY_VALUE = "filename"
-SORT_KEY_VALUE = "tenant"
-
-GSI = "filename-uploadTimestamp-index"
+table = dynamodb.Table(TABLENAME)
 
 
 def insert_file_record(file, file_url, file_type, tenant):
     payload = {
-        PARTITION_KEY_VALUE: f"{file.filename}",
-        "uploadTimestamp": get_epoch_timestamp(),
-        "tenant": tenant,
+        PARTITION_KEY_VALUE: tenant,
+        SORT_KEY_VALUE: get_epoch_timestamp(),
+        "filename": f"{file.filename}",
         "type": file_type,
         "completeTimestamp": 0,
         "numberOfProcessed": 0,
@@ -45,11 +50,24 @@ def insert_file_record(file, file_url, file_type, tenant):
 
 
 # Update file record with completeTimestamp, numberOfProcessed, numberOfRejected and error file URL
-def update_file_record(tenant, filename, completeTimestamp, numberOfProcessed, numberOfRejected, errorFileURL):
+def update_file_record(filename, completeTimestamp, numberOfProcessed, numberOfRejected, errorFileURL):
+    try:
+        file_record = table.query(
+            TableName=TABLENAME,
+            IndexName=GSI,
+            KeyConditionExpression=Key('filename').eq(filename)
+        )["Items"][0]
+    except IndexError:
+        return None
+
+    # Validate if record has been updated before
+    if file_record["url"]["error"] != "":
+        return None
+
     response = table.update_item(
         Key={
-            "tenant": tenant,
-            "filename": filename
+            PARTITION_KEY_VALUE: file_record["tenant"],
+            SORT_KEY_VALUE: file_record["uploadTimestamp"]
         },
         UpdateExpression="set completeTimestamp = :val1, numberOfProcessed = :val2, numberOfRejected = :val3, #link.#err = :val4",
         ExpressionAttributeValues={
@@ -67,27 +85,19 @@ def update_file_record(tenant, filename, completeTimestamp, numberOfProcessed, n
     return response
 
 
-# get file records of tenant
+# get error file records of tenant
 def get_error_file_record(tenant, limit):
-    item_dict = []
-    for file_type in buckets.keys():
-        response = table.query(
-            KeyConditionExpression='tenant = :tenant',
-            FilterExpression='#filetype = :type AND #link.#err <> :empty_string',
-            ExpressionAttributeValues={
-                ':tenant': {'S': tenant},
-                ':type': {'S': file_type},
-                ':empty_string': {'S': ''}
-            },
-            ExpressionAttributeNames={
-                "#link": "url",
-                "#err": "error",
-                "#filetype": "type"
-            },
-            ScanIndexForward=False,
-            Limit=limit
-        )
-        item_dict.extend(json_util.loads(json_util.dumps(response["Items"])))
-    return item_dict
-
-# search by tenant, descending order by epoch timestamp, limit 10
+    response = table.query(
+        KeyConditionExpression=Key(PARTITION_KEY_VALUE).eq(tenant),
+        FilterExpression='#link.#err <> :empty_string',
+        ExpressionAttributeValues={
+            ':empty_string': {'S': ''}
+        },
+        ExpressionAttributeNames={
+            "#link": "url",
+            "#err": "error",
+        },
+        ScanIndexForward=False,
+        Limit=limit
+    )
+    return json_util.loads(json_util.dumps(response["Items"]))
