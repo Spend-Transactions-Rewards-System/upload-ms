@@ -8,7 +8,7 @@ buckets = {
 
 
 def get_epoch_timestamp():
-    return str(int(time()))
+    return int(time())
 
 def get_current_datetime():
     now = datetime.now()

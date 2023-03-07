@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from src.utils.s3 import upload_file_to_s3
 from src.utils.files import is_valid_file_schema
 from src.utils.utils import get_epoch_timestamp, get_current_datetime
-from src.utils.db import update_file_record
+from src.utils.db import update_file_record, get_error_file_record
 
 upload = Blueprint(name="upload", import_name=__name__)
 
@@ -10,18 +10,22 @@ upload = Blueprint(name="upload", import_name=__name__)
 # Takes around 3 seconds to upload file to S3 with field validation
 @upload.route("/", methods=(["POST"]))
 def batch_file_upload_to_s3():
-    file = request.files['file']
-    file_type = request.form["type"]
+    try:
+        file = request.files['file']
+        file_type = request.form["type"]
+        tenant = request.form["tenant"]
+    except:
+        return jsonify(f"Missing request params"), 400
 
     if 'file' not in request.files:
         return jsonify("No file uploaded"), 400
     elif file_type not in ('spend', 'user'):
         return jsonify("Invalid file type"), 400
     else:
-        if is_valid_file_schema(file):
+        if is_valid_file_schema(file, file_type):
             try:
                 file.filename = f'{get_epoch_timestamp()}-{file.filename}'
-                response = upload_file_to_s3(file, file_type)
+                response = upload_file_to_s3(file, file_type, tenant)
 
                 if response:
                     return jsonify("File uploaded"), 200
@@ -37,6 +41,7 @@ def batch_file_upload_to_s3():
 def update_file_process_status():
     try:
         data = request.get_json()
+        tenant = data["tenant"]
         filename = data["filename"]
         numberOfProcessed = data["numberOfProcessed"]
         numberOfRejected = data["numberOfRejected"]
@@ -44,8 +49,30 @@ def update_file_process_status():
     except:
         return jsonify(f"Invalid request body"), 400
 
-    completeDateTime = get_current_datetime()
+    completeDateTime = get_epoch_timestamp()
 
-    response = update_file_record(filename, completeDateTime, numberOfProcessed, numberOfRejected, errorFileURL)
+    response = update_file_record(tenant, filename, completeDateTime, numberOfProcessed, numberOfRejected, errorFileURL)
+    print(response)
 
-    return jsonify(f"Record for file {filename} updated"), 200 if response["ResponseMetadata"]["HTTPStatusCode"] == 200 else jsonify(f"Unable to update record"), 500
+    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+        return jsonify(f"Record for file {filename} updated"), 200
+    else:
+        return jsonify(f"Unable to update record"), 500
+
+
+@upload.route("/error", methods=(["GET"]))
+def get_error_files():
+    limit = request.args.get('limit', default=1000, type=int)
+    try:
+        tenant = request.form["tenant"]
+    except:
+        return jsonify(f"Missing tenant field"), 400
+
+    response = get_error_file_record(tenant, limit)
+
+    return jsonify(response), 200
+
+
+@upload.route("/error/download", methods=(["GET"]))
+def download_error_file():
+    pass

@@ -16,7 +16,7 @@ s3_client = boto3.client(
 )
 
 
-def upload_file_to_s3(file, file_type):
+def upload_file_to_s3(file, file_type, tenant):
     # Choose a bucket by name
     prefix = "raw"
     bucket_name = get_bucket_name(file_type)
@@ -25,7 +25,7 @@ def upload_file_to_s3(file, file_type):
 
     file_url = f"https://{bucket_name}.s3.{os.getenv('REGION')}.amazonaws.com/{prefix}/{file.filename}"
 
-    response = insert_file_record(file, file_url)
+    response = insert_file_record(file, file_url, file_type, tenant)
     
     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
         return "success"
