@@ -85,18 +85,10 @@ def update_file_record(filename, completeTimestamp, numberOfProcessed, numberOfR
     return response
 
 
-# get error file records of tenant
-def get_error_file_record(tenant, limit):
+# get file records of tenant
+def get_file_record(tenant, limit):
     response = table.query(
         KeyConditionExpression=Key(PARTITION_KEY_VALUE).eq(tenant),
-        FilterExpression='#link.#err <> :empty_string',
-        ExpressionAttributeValues={
-            ':empty_string': {'S': ''}
-        },
-        ExpressionAttributeNames={
-            "#link": "url",
-            "#err": "error",
-        },
         ScanIndexForward=False,
         Limit=limit
     )

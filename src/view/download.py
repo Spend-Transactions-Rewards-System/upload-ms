@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, send_file
 from src.utils.s3 import download_file_from_s3
-from src.utils.db import get_error_file_record
+from src.utils.db import get_file_record
 from src.utils.utils import is_valid_url
 from src.model.jsonResponse import JsonResponse
 
@@ -8,14 +8,14 @@ download = Blueprint(name="download", import_name=__name__)
 
 
 @download.route("/list", methods=(["GET"]))
-def get_error_files():
+def get_files():
     limit = request.args.get('limit', default=1000, type=int)
     try:
         tenant = request.form["tenant"]
     except:
         return JsonResponse(f"Missing tenant field", 400).send_response()
 
-    response = get_error_file_record(tenant, limit)
+    response = get_file_record(tenant, limit)
 
     return JsonResponse(response, 200).send_response()
 
