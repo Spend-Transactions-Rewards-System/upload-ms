@@ -10,11 +10,13 @@ download = Blueprint(name="download", import_name=__name__)
 @download.route("/list", methods=(["GET"]))
 def get_files():
     limit = request.args.get('limit', default=1000, type=int)
-    # try:
-    data = request.get_json()
-    tenant = data["tenant"]
-    # except:
-    #     return JsonResponse(f"Missing tenant field", 400).send_response()
+    try:
+        data = request.get_json()
+        tenant = data["tenant"]
+        print(data)
+        print(tenant)
+    except:
+        return JsonResponse(f"Missing tenant field", 400).send_response()
 
     response = get_file_record(tenant, limit)
 
