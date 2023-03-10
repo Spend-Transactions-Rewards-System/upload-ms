@@ -1,8 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from src.utils.s3 import upload_file_to_s3
 from src.utils.files import is_valid_file_schema
-from src.utils.utils import get_epoch_timestamp, get_current_datetime
-from src.utils.db import update_file_record, get_error_file_record
+from src.utils.utils import get_epoch_timestamp
+from src.utils.db import update_file_record
 from src.model.jsonResponse import JsonResponse
 
 upload = Blueprint(name="upload", import_name=__name__)

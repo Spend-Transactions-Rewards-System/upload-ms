@@ -1,6 +1,5 @@
 import boto3
 import os
-from datetime import datetime
 from src.utils.db import insert_file_record
 from src.utils.utils import get_bucket_name
 

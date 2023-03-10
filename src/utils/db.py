@@ -1,9 +1,8 @@
 import boto3
 import os
-from src.utils.utils import get_epoch_timestamp, buckets
+from src.utils.utils import get_epoch_timestamp
 from dynamodb_json import json_util
 from boto3.dynamodb.conditions import Key
-from collections import defaultdict
 
 TABLENAME = "upload"
 

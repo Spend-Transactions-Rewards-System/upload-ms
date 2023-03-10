@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, send_file
 from src.utils.s3 import download_file_from_s3
 from src.utils.db import get_file_record
 from src.utils.utils import is_valid_url
