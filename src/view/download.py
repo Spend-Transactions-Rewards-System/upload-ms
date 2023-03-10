@@ -11,7 +11,8 @@ download = Blueprint(name="download", import_name=__name__)
 def get_files():
     limit = request.args.get('limit', default=1000, type=int)
     try:
-        tenant = request.form["tenant"]
+        data = request.get_json()
+        tenant = data["tenant"]
     except:
         return JsonResponse(f"Missing tenant field", 400).send_response()
 
