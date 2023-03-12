@@ -12,7 +12,7 @@ file_schema = {
 
 def is_valid_file_schema(file, file_type):
     file_data = file.readline().decode("utf-8")
-    fields = file_data.rstrip("\n").replace('\"', '').split(",")
+    fields = file_data.rstrip("\r\n").replace('\"', '').split(",")
     for field in fields:
         if field not in file_schema[file_type]:
             return False
