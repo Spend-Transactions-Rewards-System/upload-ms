@@ -1,4 +1,4 @@
-spend_file_schema = ('id', 'card_id', 'merchant', 'mcc', 'currency', 'amount', 'sgd_amount',
+spend_file_schema = ('id', 'card_id', 'merchant', 'mcc', 'currency', 'amount',
                      'transaction_id', 'transaction_date', 'card_pan', 'card_type')
 
 user_file_schema = ('id', 'first_name', 'last_name', 'phone', 'email', 'created_at', 'updated_at',
