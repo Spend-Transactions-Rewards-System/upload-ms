@@ -18,7 +18,15 @@ jobs:
                                                    # file, e.g. .aws/task-definition.json
       CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}           # set this to the name of the container in the
                                                    # containerDefinitions section of your task definition
+                                                   
     steps:
+    - name: Use variables
+      run: |
+        echo "aws region : ${{ env.AWS_REGION }}"
+        echo "ecs repository : ${{ env.ECS_REPOSITORY }}"
+        echo "ecs service : ${{ env.ECS_SERVICE }}"
+        echo "ecs cluster : ${{ env.ECS_CLUSTER }}"
+        echo "ecs task definition : ${{ env.ECS_TASK_DEFINITION }}"
     - name: Checkout
       uses: actions/checkout@v3
       
