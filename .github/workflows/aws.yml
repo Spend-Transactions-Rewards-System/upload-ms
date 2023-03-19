@@ -15,7 +15,6 @@ jobs:
       ECS_SERVICE: ${{ vars.ECS_SERVICE }}                 # set this to your Amazon ECS service name
       ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}                 # set this to your Amazon ECS cluster name
       ECS_TASK_DEFINITION: ${{ vars.ECS_TASK_DEFINITION }} # set this to the path to your Amazon ECS task definition
-                                                   # file, e.g. .aws/task-definition.json
       CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}           # set this to the name of the container in the
                                                    # containerDefinitions section of your task definition
                                                    
@@ -23,7 +22,7 @@ jobs:
     - name: Use variables
       run: |
         echo "aws region : ${{ env.AWS_REGION }}"
-        echo "ecs repository : ${{ env.ECS_REPOSITORY }}"
+        echo "ecs repository : ${{ env.ECR_REPOSITORY }}"
         echo "ecs service : ${{ env.ECS_SERVICE }}"
         echo "ecs cluster : ${{ env.ECS_CLUSTER }}"
         echo "ecs task definition : ${{ env.ECS_TASK_DEFINITION }}"
