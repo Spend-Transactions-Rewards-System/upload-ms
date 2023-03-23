@@ -3,10 +3,12 @@ name: Deploy to Amazon ECS
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
+    name: Build Image
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -16,27 +18,22 @@ jobs:
       ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}                 # set this to your Amazon ECS cluster name
       ECS_TASK_DEFINITION: ${{ vars.ECS_TASK_DEFINITION }} # set this to the path to your Amazon ECS task definition
       CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}           # set this to the name of the container in the
-                                                   
+      
+    defaults:
+      run:
+        working-directory: ./
+   
     steps:
-    - name: Use variables
+    - name: Echo variables
       run: |
         echo "aws region : ${{ env.AWS_REGION }}"
         echo "ecs repository : ${{ env.ECR_REPOSITORY }}"
         echo "ecs service : ${{ env.ECS_SERVICE }}"
         echo "ecs cluster : ${{ env.ECS_CLUSTER }}"
         echo "ecs task definition : ${{ env.ECS_TASK_DEFINITION }}"
-    - name: Checkout
+        
+    - name: Checkout code
       uses: actions/checkout@v3
-      
-    - name: Setup Python environment
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -53,11 +50,9 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
         IMAGE_TAG: LATEST
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
