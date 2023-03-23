@@ -5,8 +5,9 @@ FROM python:3.9-slim-buster
 WORKDIR /app
 
 # Copy the requirements file and install dependencies
+RUN pip install --upgrade pip
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
