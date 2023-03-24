@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the default port for the Flask app
-EXPOSE 80
+EXPOSE 8080
 
 # Start Gunicorn
-CMD ["gunicorn", "-w", "4", "--bind", "0.0.0.0:80", "wsgi:app"]
+CMD ["gunicorn", "-w", "4", "--bind", "0.0.0.0:8080", "wsgi:app"]
