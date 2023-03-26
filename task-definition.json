@@ -8,8 +8,8 @@
       "portMappings": [
         {
           "name": "upload-ms-80-tcp",
-          "containerPort": 80,
-          "hostPort": 80,
+          "containerPort": 8080,
+          "hostPort": 8080,
           "protocol": "tcp",
           "appProtocol": "http"
         }
@@ -38,7 +38,7 @@
   ],
   "family": "upload-ms",
   "taskRoleArn": "arn:aws:iam::148484133023:role/ECS-Role",
-  "executionRoleArn": "arn:aws:iam::148484133023:role/ECS-Role",
+  "executionRoleArn": "arn:aws:iam::148484133023:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "revision": 1,
   "volumes": [],
