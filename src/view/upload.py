@@ -62,7 +62,3 @@ def update_file_process_status():
     else:
         return JsonResponse(f"Unable to update record", 500).send_response()
 
-
-@upload.route("/healthcheck", methods=(["GET"]))
-def healthcheck():
-    return JsonResponse("Healthy", 200).send_response()
