@@ -9,7 +9,7 @@ upload = Blueprint(name="upload", import_name=__name__)
 
 
 # Takes around 3 seconds to upload file to S3 with field validation
-@upload.route("/", methods=(["POST"]))
+@upload.route("/file", methods=(["POST"]))
 def upload_batch_file_to_s3():
     try:
         file = request.files['file']
