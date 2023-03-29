@@ -17,4 +17,4 @@ def app_healthcheck():
 
 app.register_blueprint(upload, url_prefix="/api/v1/upload")
 app.register_blueprint(download, url_prefix="/api/v1/download")
-app.register_blueprint(healthcheck, url_prefix="/api/v1")
+app.register_blueprint(healthcheck, url_prefix="/api/v1/healthcheck")
