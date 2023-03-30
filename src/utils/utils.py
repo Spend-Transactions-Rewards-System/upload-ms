@@ -1,10 +1,11 @@
 from time import time
 from datetime import datetime
 from urllib.parse import urlparse
+import os
 
 buckets = {
-    "user": "user-t3-bucket",
-    "spend": "spend-t3-bucket"
+    "user": os.getenv("USER_S3_BUCKET_NAME"),
+    "spend": os.getenv("SPEND_S3_BUCKET_NAME")
 }
 
 
