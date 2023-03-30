@@ -4,7 +4,7 @@ from src.utils.utils import get_epoch_timestamp
 from dynamodb_json import json_util
 from boto3.dynamodb.conditions import Key
 
-TABLENAME = "upload"
+TABLENAME = os.getenv("DYNAMODB_TABLE_NAME")
 
 PARTITION_KEY_VALUE = "tenant"
 SORT_KEY_VALUE = "uploadTimestamp"
