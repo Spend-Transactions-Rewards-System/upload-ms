@@ -1,4 +1,3 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 
 
@@ -13,7 +12,7 @@
     <a href="https://itsa-t3-upload-ms.stoplight.io/docs/upload-ms/branches/main/9ae56e8b59f9f-upload-ms"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://itsat1g3.com">View Demo</a>
+    <a href="https://www.itsag1t3.com">View Demo</a>
   </p>
 </div>
 
@@ -101,7 +100,7 @@ The upload microservice aims to provide functionalities to handle large file val
 ### Team Members
 * Sean Tan
 * Joshua Zhang
-* Tang Gi Han
+* Tan Gi Han
 * Stanford
 * Hafil
 * Dino
