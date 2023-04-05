@@ -9,6 +9,7 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 2147483648
 CORS(app)
 
 @app.route("/", methods=(["GET"]))
