@@ -17,6 +17,7 @@
 </div>
 
 
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -38,6 +39,9 @@
   </ol>
 </details>
 
+<!-- ABOUT THE PROJECT -->
+## About The Microservice
+Reward programs are becoming a popular marketing tool for banks and credit card issuers to attract and retain customers. Our application provides customers with an efficient and user-friendly platform for managing their rewards. A large number of spend transactions can be processed daily in real-time and the application is able to accept these transactions via a file upload or API request to the tenant. Campaign management is available for tenants, where they can run customisable campaigns for specific card programs that encourage user spending, while at the same time reward customers. From a customer perspective, this enhances the perceived value of these card programs offered by the tenant, helping our affiliated banks to preserve brand loyalty and expand their market share.
 
 
 The upload microservice aims to provide functionalities to handle large file validation and file uploads to the cloud for other services to retrieve it for further processing.
